@@ -33,7 +33,7 @@ button:focus-visible{outline:3px solid var(--sight);outline-offset:2px}
 .case{background:linear-gradient(90deg,var(--oak-d),var(--oak) 6%,var(--oak) 94%,var(--oak-d));border-radius:18px 18px 8px 8px;padding:18px 18px 10px;box-shadow:inset 0 0 0 4px rgba(255,255,255,.18),0 24px 40px -20px rgba(90,50,10,.55)}
 .shelf{position:relative;background:linear-gradient(#b9814b,#d39d64 30%,#e4b37c);border-radius:8px;padding:18px 18px 0;margin-bottom:16px;min-height:290px;display:flex;align-items:flex-end;gap:6px;overflow-x:auto;overflow-y:visible;box-shadow:inset 0 10px 18px -6px rgba(70,35,5,.45)}
 .shelf::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16px;background:linear-gradient(var(--oak-l),var(--oak-d));border-radius:0 0 6px 6px}
-.plate{position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);z-index:3;background:linear-gradient(#f6e1a3,#d9b45a);border:1.5px solid #a07a2a;border-radius:6px;padding:2px 12px;font-family:var(--zh);font-size:.78rem;color:#5a4210;white-space:nowrap}
+.plate{position:absolute;left:50%;bottom:-1px;transform:translateX(-50%);z-index:3;background:linear-gradient(#f6e1a3,#d9b45a);border:1.5px solid #a07a2a;border-radius:6px;padding:2px 12px;font-family:var(--zh);font-size:.78rem;color:#5a4210;white-space:nowrap}
 .spine{position:relative;z-index:2;flex:none;width:58px;border:0;border-radius:5px 5px 2px 2px;margin-bottom:16px;padding:14px 0 10px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;color:#fff;
   background:linear-gradient(90deg,rgba(0,0,0,.22),rgba(255,255,255,.18) 30%,rgba(255,255,255,0) 55%,rgba(0,0,0,.25)),var(--c);
   box-shadow:2px 0 0 rgba(0,0,0,.12),0 6px 10px -6px rgba(0,0,0,.5);transition:transform .25s,box-shadow .25s}
@@ -42,10 +42,10 @@ button:focus-visible{outline:3px solid var(--sight);outline-offset:2px}
 .spine:hover,.spine:focus-visible{transform:translateY(-16px);box-shadow:0 18px 18px -10px rgba(0,0,0,.45)}
 .spine .t{writing-mode:vertical-rl;font-family:var(--display);font-weight:800;font-size:1.05rem;letter-spacing:.04em;text-shadow:0 1px 0 rgba(0,0,0,.25)}
 .spine .zh{writing-mode:vertical-rl;font-family:var(--zh);font-size:.72rem;opacity:.95}
-.spine .n{width:30px;height:30px;border-radius:50%;background:var(--navy);box-shadow:0 0 0 2.5px var(--gold);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:.85rem}
+.spine .n{min-width:30px;height:30px;padding:0 4px;border-radius:15px;font-size:.78rem!important;background:var(--navy);box-shadow:0 0 0 2.5px var(--gold);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:.85rem}
 .spine.lean{transform:rotate(-6deg);transform-origin:bottom left;margin-left:10px}
 .spine.lean:hover{transform:rotate(-6deg) translateY(-16px)}
-.deco{flex:none;margin-left:auto;margin-bottom:16px;align-self:flex-end;width:120px;height:150px}
+
 .room .foot{font-family:var(--zh);font-size:.8rem;color:var(--muted);text-align:center}
 .voice{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;font-family:var(--zh);font-size:.88rem;color:var(--muted)}
 .voice select{font:inherit;max-width:100%;padding:4px 8px;border-radius:8px;border:1.5px solid #e2cfae;background:#fff;color:var(--ink)}
@@ -153,6 +153,15 @@ button:focus-visible{outline:3px solid var(--sight);outline-offset:2px}
 .title-pg{align-items:center;justify-content:center;text-align:center;gap:.4em}
 .title-pg .t1{font-family:var(--display);font-weight:800;font-size:2.4em;color:#e2457a}
 .title-pg .t2{font-size:1.1em}
+.shelf{justify-content:space-between;gap:10px}
+.shelf .row{display:flex;align-items:flex-end;gap:4px;flex:none}
+.shelf .deco{flex:none;margin:0 0 16px;align-self:flex-end;display:block}
+.faceout{flex:none;position:relative;z-index:2;border:0;padding:0;background:transparent;width:196px;margin-bottom:22px;transform:rotate(-3deg);transition:transform .25s}
+.faceout svg{display:block;width:100%;height:auto;border-radius:6px;box-shadow:0 14px 16px -10px rgba(0,0,0,.5)}
+.faceout .stand{position:absolute;left:30%;right:30%;bottom:-8px;height:10px;background:#8a5a30;border-radius:3px}
+.faceout:hover,.faceout:focus-visible{transform:rotate(0) translateY(-10px)}
+@media (max-width:980px){.shelf .deco:nth-of-type(n+3){display:none}}
+@media (max-width:640px){.faceout{display:none}.shelf .deco{display:none}.shelf{justify-content:center;padding:14px 8px 0;min-height:0}.shelf .row{gap:3px}.spine{width:44px}.spine .t{font-size:.92rem}}
 @media (max-width:640px){.shelf{min-height:250px}.spine{width:50px}.deco{display:none}}
 @media (prefers-reduced-motion:reduce){.leaf,.book,.flyer,.spine{transition:none}}
 </style>
@@ -839,17 +848,33 @@ const BOOKS=[...TALK.map((b,i)=>({kind:'talk',id:'t'+b.n,label:String(b.n),t:'Dr
 const coverOf=B=>coverSVG(B.kind,B.label,B.kind==='talk'?B.data.n:B.i);
 
 /* ---------- shelf ---------- */
-const DECO=[`<svg class="deco" viewBox="0 0 120 150" aria-hidden="true">${WC}${G(60,150,.55,PROPS.plant())}${mini(30,40,'#ffc93c')}</svg>`,
-  `<svg class="deco" viewBox="0 0 120 150" aria-hidden="true">${WC}${drone(60,70,.55,'#ff7a3d','happy')}<rect x="30" y="128" width="60" height="22" rx="4" fill="#fff" stroke="${INK}" stroke-width="2"/></svg>`,
-  `<svg class="deco" viewBox="0 0 120 150" aria-hidden="true">${WC}${zebra(60,150,.45,'wave')}</svg>`];
+const dsvg=(w,h,inner,cls='')=>`<svg class="deco ${cls}" viewBox="0 0 ${w} ${h}" style="width:${w}px;height:${h}px" aria-hidden="true">${WC}${inner}</svg>`;
+const flatBooks=(cols)=>dsvg(130,96,cols.map((c,i)=>`<g transform="translate(${6+(i%2)*8} ${78-i*20})"><rect width="${112-(i%3)*10}" height="18" rx="3" fill="${c}" stroke="${INK}" stroke-width="2"/><rect x="${8}" y="5" width="${40}" height="3" fill="#fff" opacity=".6"/></g>`).join(''));
+const DECOS={
+ trophy:()=>dsvg(96,130,`${P('<rect x="22" y="112" width="52" height="16" rx="3"/>','#a8714a')}${P('<rect x="36" y="92" width="24" height="22"/>','#e8b84a')}${P('<path d="M18 22 h60 v20 q0 36 -30 40 q-30 -4 -30 -40z"/>','#ffcf4a')}${pen('M18 30 q-14 0 -12 14 q2 12 16 12 M78 30 q14 0 12 14 q-2 12 -16 12',3)}${G(48,46,.22,drone(0,0,1,'#ff7a3d','happy'))}<text x="48" y="124" text-anchor="middle" font-family="Andika" font-weight="700" font-size="9" fill="#fff">DRONE CUP</text>`),
+ drone:()=>dsvg(110,130,`${drone(55,52,.62,'#3d6fb6','happy')}${P('<path d="M30 128 L40 104 L70 104 L80 128Z"/>','#f4f4f4')}`),
+ robot:()=>dsvg(96,140,G(48,138,.78,PROPS.robot())),
+ plant:()=>dsvg(96,140,G(48,138,1.05,PROPS.plant())),
+ blocks:()=>dsvg(130,110,[['A','#e85b5b',8,66],['B','#5aa6d8',50,66],['C','#7dbb5c',92,66],['D','#ffd166',29,24]].map(([l,c,x,y])=>`${P(`<rect x="${x}" y="${y}" width="38" height="38" rx="5"/>`,c)}<text x="${x+19}" y="${y+28}" text-anchor="middle" font-family="Sniglet" font-weight="800" font-size="24" fill="#fff" stroke="${INK}" stroke-width=".8">${l}</text>`).join('')),
+ globe:()=>dsvg(100,140,`${P('<rect x="30" y="124" width="40" height="12" rx="4"/>','#a8714a')}${pen('M50 124 L50 108',4)}${P('<circle cx="50" cy="62" r="44"/>','#8fd0f0')}${P('<path d="M30 40 q14 -10 22 4 q-4 14 -18 12 q-8 -4 -4 -16Z"/>','#7dbb5c')}${P('<path d="M58 70 q16 -6 22 8 q-6 18 -20 10Z"/>','#7dbb5c')}${pen('M8 62 A42 12 0 0 0 92 62',2)}`),
+ frame:()=>dsvg(110,120,`${P('<rect x="6" y="8" width="98" height="104" rx="6"/>','#c48a52')}<rect x="16" y="18" width="78" height="84" fill="#d9f0ff"/>${G(55,98,.32,zebra(0,0,1,'cheer'))}${G(55,98,.32,pilotGear(0))}`),
+ bookend:()=>dsvg(46,140,`${P('<path d="M6 138 L6 30 Q6 10 26 10 L40 10 L40 138Z"/>','#e2457a')}<circle cx="23" cy="44" r="10" fill="#fff" stroke="${INK}" stroke-width="2"/>`),
+ rocket:()=>dsvg(90,150,G(45,150,.9,PROPS.rocket())),
+ abc:()=>dsvg(120,110,`${P('<rect x="8" y="20" width="104" height="82" rx="8"/>','#fff')}<text x="60" y="56" text-anchor="middle" font-family="Sniglet" font-weight="800" font-size="28" fill="#e2457a">Aa Bb</text><text x="60" y="88" text-anchor="middle" font-family="Sniglet" font-weight="800" font-size="28" fill="#3d6fb6">Cc Dd</text>`),
+};
+const SHELF_SET={talk:['flat:#7dbb5c,#ffd166,#e85b5b','trophy','drone','plant'],sight:['bookend','blocks','robot','flat:#5aa6d8,#c27ae0,#ffb340,#7dbb5c','globe'],phon:['abc','frame','rocket','flat:#ef8fb0,#5aa6d8','plant']};
+const deco=k=>k.startsWith('flat:')?flatBooks(k.slice(5).split(',')):DECOS[k]();
 function buildShelves(){
-  const html=['talk','sight','phon'].map((k,si)=>`<div class="shelf">${BOOKS.filter(b=>b.kind===k).map((b,j,arr)=>{
-      const h=[236,226,244,232,240,228][j%6];
-      return `<button class="spine${j===arr.length-1&&k!=='talk'?' lean':''}" data-id="${b.id}" style="--c:${SERIES[k].c[j%SERIES[k].c.length]};height:${h}px" aria-label="打開 ${b.title}">
-        <span class="t">${esc(b.t)}</span><span class="zh">${esc(b.zh)}</span><span class="n">${esc(b.label)}</span></button>`;}).join('')}${DECO[si]}<span class="plate">${SERIES[k].plate}</span></div>`).join('');
+  const html=['talk','sight','phon'].map(k=>{
+    const list=BOOKS.filter(b=>b.kind===k), first=list[0], set=SHELF_SET[k];
+    const spines=list.map((b,j)=>{const h=[258,248,266,252,262,250][j%6];
+      return `<button class="spine" data-id="${b.id}" style="--c:${SERIES[k].c[j%SERIES[k].c.length]};height:${h}px" aria-label="打開 ${b.title}">
+        <span class="t">${esc(b.t)}</span><span class="zh">${esc(b.zh)}</span><span class="n">${esc(b.label)}</span></button>`;}).join('');
+    const face=`<button class="faceout" data-id="${first.id}" aria-label="打開 ${first.title}">${coverOf(first)}<span class="stand"></span></button>`;
+    const left=set.slice(0,1).map(deco).join(''), right=set.slice(1).map(deco).join('');
+    return `<div class="shelf">${left}${face}<div class="row">${spines}</div>${right}<span class="plate">${SERIES[k].plate}</span></div>`;}).join('');
   document.getElementById('case').innerHTML=html;
 }
-
 /* ---------- page builders ---------- */
 const pg=(cls,inner,n)=>`<div class="pg ${cls}">${inner}${n>0?`<span class="no">${n}</span>`:''}</div>`;
 const coverPage=B=>({cover:true,html:`<div class="pg">${coverOf(B)}</div>`});
@@ -982,7 +1007,7 @@ function closeBook(){ if(!BK) return; try{speechSynthesis.cancel()}catch(e){}
 /* ---------- events ---------- */
 buildShelves();
 document.getElementById('brand').src=LOGO;
-document.getElementById('case').addEventListener('click',e=>{const s=e.target.closest('.spine'); if(s) openBook(s.dataset.id,s);});
+document.getElementById('case').addEventListener('click',e=>{const s=e.target.closest('.spine,.faceout'); if(s) openBook(s.dataset.id,s.classList.contains('faceout')?s.querySelector('svg'):s);});
 document.getElementById('closeBtn').onclick=closeBook;
 document.getElementById('prev').onclick=()=>go(BK.cur-1);
 document.getElementById('next').onclick=()=>go(BK.cur+1);
