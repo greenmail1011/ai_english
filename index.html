@@ -3,23 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
 <meta name="description" content="Fly High! 無人機英語繪本系列｜未來斑馬AI創新學苑">
 <title>Fly High! 無人機英語繪本系列</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sniglet:wght@400;800&family=Andika:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap">
 <style>
 /* Layout: library shelf of 10 books (two series) → open a book to see its contents → unit spreads as 4 page cards */
-:root{
-  --bg:#f3f1ea; --paper:#fffdf8; --ink:#2f2a2a; --muted:#6c6457; --line:#ddd5c4;
-  --talk:#2c7fb8; --talk-soft:#dcecf7; --sight:#e8772e; --sight-soft:#fde6d3;
+:root{color-scheme:light;
+  --bg:#fff6e0; --paper:#ffffff; --ink:#2f2a2a; --muted:#6c6457; --line:#ddd5c4;
+  --talk:#2c7fb8; --talk-soft:#d9f0ff; --sight:#e8772e; --sight-soft:#ffe6cc;
   --red:#c8323c; --trace:#2f7fc4; --navy:#24427a; --gold:#f1c84b;
   --display:"Sniglet","Comic Sans MS",system-ui,sans-serif;
   --read:"Andika","Century Gothic","Trebuchet MS",system-ui,sans-serif;
   --zh:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#1b1f26;--muted:#b4ab9c;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#1b1f26;--muted:#b4ab9c;color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--read);padding-inline:16px;padding-block:20px 40px}
+body{margin:0;color-scheme:light;background:var(--bg) radial-gradient(circle at 12% 8%,#ffe9a8 0,transparent 32%) no-repeat,radial-gradient(circle at 92% 30%,#d4f0ff 0,transparent 30%) no-repeat;background-color:var(--bg);color:var(--ink);font-family:var(--read);padding-inline:16px;padding-block:20px 40px}
 .wrap{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
 button{font:inherit;cursor:pointer}
 button:focus-visible{outline:3px solid var(--sight);outline-offset:2px}
