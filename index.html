@@ -390,7 +390,7 @@ const PHON = [
  ['N',[['net','🥅'],['nut','🔩'],['nine','9️⃣'],['notebook','📓']],'A {n}ut is in the {n}et.','{n} for {n}ine {n}ets'],
  ['O',[['octopus','🐙'],['ox','🐂'],['otter','🦦'],['olive','🫒']],'An {o}ctopus and an {o}x are on the field.','{o} for an {o}tter'],
  ['P',[['pilot','🧑‍✈️'],['phone','📱'],['plug','🔌'],['pen','🖊️']],'The {p}ilot has a {p}hone.','{p} for a {p}lug and a {p}en'],
- ['Q',[['quadcopter','DRONE'],['queen','👑'],['question','❓'],['quilt','🛏️']],'The {q}ueen has a {q}uadcopter.','{q} for a {q}uick {q}uestion'],
+ ['Q',[['quadcopter','DRONE'],['queen','👸'],['question','❓'],['quilt','🛏️']],'The {q}ueen has a {q}uadcopter.','{q} for a {q}uick {q}uestion'],
  ['R',[['robot','🤖'],['rocket','🚀'],['radio','📻'],['ring','💍']],'A {r}obot is on the {r}ocket.','{r} for a {r}ed {r}ing'],
  ['S',[['satellite','🛰️'],['screen','🖥️'],['sun','☀️'],['star','⭐']],'The {s}atellite is in the {s}ky.','{s} for the {s}un and a {s}tar'],
  ['T',[['tablet','📱'],['telescope','🔭'],['train','🚆'],['tiger','🐯']],'A {t}iger has a {t}ablet.','{t} for a {t}rain and a {t}elescope'],
@@ -399,7 +399,7 @@ const PHON = [
  ['W',[['watch','⌚'],['wheel','🛞'],['wind','🌬️'],['wifi','📶']],'A {w}orm is on the {w}heel.','{w} for the {w}ind'],
  ['X',[['x-ray','🩻'],['box','📦'],['fox','🦊'],['six','6️⃣']],'A fo{x} is in the bo{x}.','{x} for si{x} {x}-rays'],
  ['Y',[['yo-yo','🪀'],['yellow','🟡'],['yacht','⛵'],['yarn','🧶']],'The yak has a {y}ellow {y}o-yo.','{y} for a {y}acht'],
- ['Z',[['zebra','🦓'],['zero','0️⃣'],['zoom','🔍'],['zip','🤐']],'Zebby the {z}ebra can {z}oom!','{z} for {z}ero'],
+ ['Z',[['zebra','🦓'],['zero','0️⃣'],['zoom','🔍'],['zip','🤐']],'Zebby the {z}ebra flies a {z}ippy drone!','{z} for {z}ero'],
 ];
 const LCOL=['#e8772e','#3d6fb6','#4a9a4a','#c2477d','#7a4fa3','#2f8f9d'];
 const PHON_BOOKS=[
@@ -502,6 +502,149 @@ const cloud=(x,y,s=1)=>`<g transform="translate(${x} ${y}) scale(${s})">${pen('M
 const sun=(x,y)=>`<circle cx="${x}" cy="${y}" r="28" fill="#ffc93c" filter="url(#wc)"/><circle cx="${x}" cy="${y}" r="14" fill="#f39a3c" opacity=".55" filter="url(#wc)"/>`;
 const tuft=(x,y,c='#7dbb5c')=>P(`<path d="M${x-22} ${y} Q${x-18} ${y-40} ${x-6} ${y-10} Q${x} ${y-52} ${x+6} ${y-10} Q${x+18} ${y-42} ${x+22} ${y}Z"/>`,c);
 const COLORS=['#ff7a3d','#3d6fb6','#e2457a','#4a9a4a','#7a4fa3','#e0a21e'];
+/* ===== Scene composer: the picture follows the words in the sentence ===== */
+const G=(x,y,s,inner)=>`<g transform="translate(${x} ${y}) scale(${s})">${inner}</g>`;
+// ---- props (drawn around 0,0; grounded props stand on y=0) ----
+const PROPS={
+ robot:(c='#9fb4c8')=>`${P('<rect x="-30" y="-70" width="60" height="62" rx="12"/>',c)}${P('<rect x="-24" y="-8" width="14" height="8" rx="3"/>','#6f8296')}${P('<rect x="10" y="-8" width="14" height="8" rx="3"/>','#6f8296')}
+   ${P('<rect x="-50" y="-62" width="18" height="40" rx="9"/>',c)}${P('<rect x="32" y="-62" width="18" height="40" rx="9"/>',c)}
+   ${P('<rect x="-12" y="-52" width="24" height="22" rx="5"/>','#ffd166')}
+   ${P('<rect x="-36" y="-130" width="72" height="56" rx="14"/>',c)}${pen('M0 -130 L0 -148',3)}<circle cx="0" cy="-152" r="7" fill="#ef6f8f" stroke="${INK}" stroke-width="2"/>
+   ${P('<rect x="-26" y="-118" width="52" height="30" rx="10"/>','#2f3b4a')}<circle cx="-12" cy="-103" r="6" fill="#7ee0ff"/><circle cx="12" cy="-103" r="6" fill="#7ee0ff"/>${blush(-28,-84,6)}${blush(28,-84,6)}`,
+ robotdog:()=>`${P('<rect x="-50" y="-58" width="90" height="34" rx="14"/>','#9fb4c8')}${[-40,-20,15,32].map(x=>P(`<rect x="${x}" y="-26" width="10" height="26" rx="4"/>`,'#6f8296')).join('')}${P('<rect x="30" y="-90" width="44" height="38" rx="10"/>','#9fb4c8')}<circle cx="52" cy="-74" r="5" fill="#7ee0ff"/>${P('<path d="M-50 -50 L-70 -72 L-60 -46Z"/>','#6f8296')}`,
+ teacher:(kind='teacher')=>{const shirt=kind==='coach'?'#3d6fb6':kind==='firefighter'?'#d9363b':kind==='doctor'?'#ffffff':kind==='farmer'?'#7dbb5c':'#e2457a';
+   return `${P('<rect x="-26" y="-8" width="20" height="8" rx="4"/>',INK)}${P('<rect x="6" y="-8" width="20" height="8" rx="4"/>',INK)}
+   ${P('<path d="M-36 -10 L-30 -100 Q0 -114 30 -100 L36 -10Z"/>',shirt)}
+   ${P('<ellipse cx="-42" cy="-70" rx="11" ry="32" transform="rotate(12 -42 -70)"/>',shirt)}${P('<ellipse cx="44" cy="-84" rx="11" ry="32" transform="rotate(-35 44 -84)"/>',shirt)}
+   ${P('<circle cx="0" cy="-140" r="32"/>','#ffd9b8')}
+   ${kind==='firefighter'?P('<path d="M-38 -150 Q0 -200 38 -150 Z"/>','#d9363b'):kind==='farmer'?P('<ellipse cx="0" cy="-160" rx="48" ry="10"/>','#e0b45a')+P('<path d="M-24 -162 Q0 -196 24 -162Z"/>','#e0b45a'):kind==='doctor'?P('<rect x="-24" y="-178" width="48" height="20" rx="6"/>','#fff')+`<path d="M-6 -168 h12 M0 -174 v12" stroke="#d9363b" stroke-width="4"/>`:P('<path d="M-32 -150 Q-30 -182 0 -180 Q32 -182 32 -150 Q16 -164 -32 -150Z"/>','#5a3b2a')}
+   ${eye(-11,-140,6)}${eye(11,-140,6)}${blush(-20,-128,6)}${blush(20,-128,6)}${smile(0,-124,6)}
+   ${kind==='coach'?`<circle cx="0" cy="-92" r="6" fill="#ffd166" stroke="${INK}" stroke-width="2"/>${pen('M0 -98 L-10 -108 M0 -98 L10 -108',1.5)}`:''}`;},
+ battery:(full=true)=>`${P('<rect x="-26" y="-90" width="52" height="90" rx="10"/>','#f4f4f4')}${P('<rect x="-10" y="-100" width="20" height="12" rx="3"/>','#8a96a3')}${(full?[0,1,2,3]:[0]).map(i=>`<rect x="-18" y="${-20-i*20}" width="36" height="14" rx="3" fill="${full?'#5cc26b':'#e85b5b'}"/>`).join('')}`,
+ goggles:()=>`${P('<rect x="-56" y="-30" width="50" height="34" rx="16"/>','#7ee0ff')}${P('<rect x="6" y="-30" width="50" height="34" rx="16"/>','#7ee0ff')}${pen('M-6 -14 L6 -14 M-56 -14 L-72 -18 M56 -14 L72 -18',4)}<path d="M-46 -22 l12 0 M16 -22 l12 0" stroke="#fff" stroke-width="4"/>`,
+ helmet:()=>`${P('<path d="M-50 0 Q-50 -70 0 -70 Q50 -70 50 0 Z"/>','#ffb340')}${P('<rect x="-56" y="-8" width="112" height="12" rx="6"/>','#e8962c')}<path d="M-20 -60 q20 -10 40 0" stroke="#fff" stroke-width="5" fill="none"/>`,
+ remote:()=>`${pen('M30 -40 L48 -86',3)}<circle cx="48" cy="-88" r="6" fill="#ef6f8f"/>${P('<rect x="-56" y="-70" width="112" height="64" rx="18"/>','#5aa6d8')}<circle cx="-26" cy="-38" r="12" fill="${INK}"/><circle cx="26" cy="-38" r="12" fill="${INK}"/>`,
+ ring:()=>`<rect x="-5" y="-60" width="10" height="60" fill="#9aa6b5" stroke="${INK}" stroke-width="2"/><g transform="translate(0 -120)"><circle r="56" fill="none" stroke="#e2457a" stroke-width="13"/><circle r="56" fill="none" stroke="${INK}" stroke-width="2"/><circle r="63" fill="none" stroke="${INK}" stroke-width="1.6"/><circle r="49" fill="none" stroke="${INK}" stroke-width="1.6"/></g>`,
+ net:()=>`${pen('M-110 0 L-110 -150 L110 -150 L110 0',4)}<g stroke="${INK}" stroke-width="1" opacity=".45">${Array.from({length:11},(_,i)=>`<line x1="${-110+i*22}" y1="-150" x2="${-110+i*22}" y2="0"/>`).join('')}${Array.from({length:7},(_,i)=>`<line x1="-110" y1="${-150+i*22}" x2="110" y2="${-150+i*22}"/>`).join('')}</g>`,
+ ball:(c='#ffd166')=>`${P('<circle cx="0" cy="-30" r="30"/>',c)}${pen('M-30 -30 Q0 -10 30 -30 M0 -60 Q-14 -30 0 0',2)}`,
+ box:()=>`${P('<rect x="-60" y="-70" width="120" height="70" rx="6"/>','#d9a066')}${P('<path d="M-60 -70 L-40 -96 L80 -96 L60 -70Z"/>','#e8b77e')}${pen('M-10 -70 L-10 0',2)}`,
+ table:()=>`${P('<rect x="-90" y="-80" width="180" height="16" rx="6"/>','#c48a5a')}${P('<rect x="-80" y="-64" width="12" height="64" rx="4"/>','#a8714a')}${P('<rect x="68" y="-64" width="12" height="64" rx="4"/>','#a8714a')}`,
+ chair:()=>`${P('<rect x="-30" y="-120" width="12" height="120" rx="4"/>','#a8714a')}${P('<rect x="-30" y="-56" width="66" height="12" rx="4"/>','#c48a5a')}${P('<rect x="26" y="-44" width="10" height="44" rx="4"/>','#a8714a')}`,
+ sun:()=>`<g class="spin">${Array.from({length:8},(_,i)=>`<rect x="-4" y="-56" width="8" height="16" rx="4" fill="#ffc93c" transform="rotate(${i*45})"/>`).join('')}</g>${P('<circle r="34"/>','#ffc93c')}`,
+ raincloud:()=>`${P('<path d="M-60 0 C-90 0 -90 -40 -56 -40 C-50 -76 6 -80 16 -46 C40 -70 84 -54 76 -20 C100 -18 98 0 76 0Z"/>','#b9c6d6')}${[-40,-10,20,50].map((x,i)=>`<path d="M${x} ${16+i%2*14} l-6 16" stroke="#5aa6d8" stroke-width="5" stroke-linecap="round"/>`).join('')}`,
+ cloud:()=>P('<path d="M-60 0 C-90 0 -90 -40 -56 -40 C-50 -76 6 -80 16 -46 C40 -70 84 -54 76 -20 C100 -18 98 0 76 0Z"/>','#ffffff'),
+ wind:()=>pen('M-80 -20 Q-10 -30 40 -20 Q70 -14 60 -40 M-70 10 Q10 0 70 10 Q100 16 90 -6 M-60 40 Q0 32 30 40',4),
+ moon:()=>`${P('<path d="M10 -40 A40 40 0 1 0 10 40 A30 30 0 1 1 10 -40Z"/>','#fff3b0')}`,
+ tree:()=>`${P('<rect x="-10" y="-90" width="20" height="90" rx="5"/>','#9a6b47')}${P('<circle cx="0" cy="-130" r="56"/>','#7dbb5c')}${P('<circle cx="-26" cy="-110" r="28"/>','#a6d36a')}`,
+ flower:()=>`${pen('M0 0 L0 -60',4)}${[0,72,144,216,288].map(a=>P(`<circle cx="${Math.cos(a*Math.PI/180)*18}" cy="${-70+Math.sin(a*Math.PI/180)*18}" r="13"/>`,'#ef8fb0')).join('')}<circle cx="0" cy="-70" r="10" fill="#ffd166"/>`,
+ bird:()=>`${P('<ellipse cx="0" cy="0" rx="30" ry="18"/>','#5aa6d8')}${P('<path d="M-6 -8 L-30 -44 L14 -10Z"/>','#3d6fb6')}${pen('M28 -4 L44 0 L28 4',3)}<circle cx="14" cy="-4" r="3.4" fill="${INK}"/>`,
+ car:()=>`${P('<path d="M-80 -20 L-80 -50 L-40 -50 L-20 -80 L40 -80 L60 -50 L80 -50 L80 -20Z"/>','#e85b5b')}${P('<circle cx="-46" cy="-16" r="16"/>','#3f4246')}${P('<circle cx="46" cy="-16" r="16"/>','#3f4246')}<rect x="-14" y="-74" width="48" height="22" rx="4" fill="#bfe8ff"/>`,
+ boat:()=>`${P('<path d="M-90 -30 L90 -30 L60 0 L-60 0Z"/>','#e85b5b')}${pen('M0 -30 L0 -130',4)}${P('<path d="M4 -126 L70 -40 L4 -40Z"/>','#fff')}<path d="M-110 6 q20 -10 40 0 t40 0 t40 0 t40 0 t40 0" stroke="#5aa6d8" stroke-width="4" fill="none"/>`,
+ rocket:()=>`${P('<path d="M0 -150 Q34 -110 30 -40 L-30 -40 Q-34 -110 0 -150Z"/>','#f4f4f4')}<circle cx="0" cy="-96" r="12" fill="#7ee0ff" stroke="${INK}" stroke-width="2.5"/>${P('<path d="M-30 -70 L-52 -30 L-30 -40Z"/>','#e85b5b')}${P('<path d="M30 -70 L52 -30 L30 -40Z"/>','#e85b5b')}${P('<path d="M-16 -40 L0 -6 L16 -40Z"/>','#ffb340')}`,
+ tablet:()=>`${P('<rect x="-56" y="-110" width="112" height="84" rx="12"/>','#3f4246')}<rect x="-46" y="-100" width="92" height="64" rx="6" fill="#bfe8ff"/>${G(0,-68,.25,drone(0,0,1,'#ff7a3d','happy'))}`,
+ computer:()=>`${P('<rect x="-70" y="-120" width="140" height="90" rx="10"/>','#3f4246')}<rect x="-60" y="-110" width="120" height="70" rx="5" fill="#bfe8ff"/><text x="-50" y="-80" font-family="monospace" font-size="16" fill="#3d6fb6">go_up()</text>${P('<rect x="-84" y="-24" width="168" height="16" rx="6"/>','#8a96a3')}`,
+ blocks:()=>`${P('<rect x="-60" y="-40" width="40" height="40" rx="4"/>','#e85b5b')}${P('<rect x="-16" y="-40" width="40" height="40" rx="4"/>','#5aa6d8')}${P('<rect x="-38" y="-80" width="40" height="40" rx="4"/>','#ffd166')}${P('<rect x="28" y="-40" width="40" height="40" rx="4"/>','#7dbb5c')}`,
+ cake:()=>`${P('<rect x="-50" y="-60" width="100" height="60" rx="8"/>','#f6b3c8')}${P('<path d="M-50 -60 Q-38 -46 -26 -60 Q-14 -46 0 -60 Q14 -46 26 -60 Q38 -46 50 -60 L50 -70 L-50 -70Z"/>','#fff')}<rect x="-3" y="-96" width="6" height="26" fill="#5aa6d8"/><path d="M0 -110 q8 8 0 14 q-8 -6 0 -14" fill="#ffb340"/>`,
+ water:()=>`${P('<rect x="-22" y="-100" width="44" height="100" rx="14"/>','#bfe8ff')}${P('<rect x="-12" y="-118" width="24" height="18" rx="4"/>','#5aa6d8')}<path d="M-22 -50 q22 10 44 0 L22 -14 Q22 0 8 0 L-8 0 Q-22 0 -22 -14Z" fill="#5aa6d8" opacity=".6"/>`,
+ wash:()=>`${P('<path d="M-70 -50 L70 -50 L56 0 L-56 0Z"/>','#e8eef4')}${P('<path d="M30 -50 L30 -100 L-10 -100 L-10 -90"/>','#b9c6d6')}${[0,1,2].map(i=>`<path d="M-10 ${-84+i*10} q-3 5 0 8 q3 -3 0 -8" fill="#5aa6d8"/>`).join('')}${[-40,-20,40].map((x,i)=>`<circle cx="${x}" cy="${-70-i*12}" r="${8+i*2}" fill="#fff" stroke="#9fd0ee" stroke-width="2"/>`).join('')}`,
+ propeller:()=>`<g class="spin">${P('<ellipse cx="0" cy="0" rx="80" ry="14"/>','#8a96a3')}${P('<ellipse cx="0" cy="0" rx="14" ry="80"/>','#8a96a3')}</g><circle r="12" fill="${INK}"/>`,
+ light:(c)=>`${P('<rect x="-26" y="-150" width="52" height="120" rx="12"/>','#3f4246')}<circle cx="0" cy="-122" r="14" fill="${c==='red'?'#ff5a5a':'#5a3f3f'}"/><circle cx="0" cy="-84" r="14" fill="${c==='green'?'#5cd66b':'#3f5a42'}"/><rect x="-5" y="-30" width="10" height="30" fill="#8a96a3"/>`,
+ lights:()=>[0,1,2,3,4,5].map(i=>`<circle cx="${-75+i*30}" cy="${-20-Math.sin(i)*14}" r="10" fill="${['#ff5a5a','#ffd166','#5cd66b','#5aa6d8','#c27ae0','#ff9a3d'][i]}" filter="url(#wc)"/>`).join('')+pen('M-90 -26 Q0 6 90 -26',2),
+ plug:()=>`${P('<rect x="-30" y="-60" width="60" height="50" rx="10"/>','#f4f4f4')}${pen('M-12 -60 L-12 -84 M12 -60 L12 -84',5)}${pen('M0 -10 Q0 20 40 20 Q80 20 80 0',4)}`,
+ book:()=>`${P('<path d="M0 -20 L-80 -36 L-80 -110 L0 -94Z"/>','#fff')}${P('<path d="M0 -20 L80 -36 L80 -110 L0 -94Z"/>','#fff')}${pen('M-64 -84 L-16 -76 M-64 -68 L-16 -60 M16 -76 L64 -84 M16 -60 L64 -68',2)}${G(46,-70,.18,drone(0,0,1,'#ff7a3d','happy'))}`,
+ music:()=>`${pen('M-30 -20 L-30 -90 L20 -100 L20 -30',4)}${P('<ellipse cx="-40" cy="-20" rx="14" ry="10"/>',INK)}${P('<ellipse cx="10" cy="-30" rx="14" ry="10"/>',INK)}`,
+ clock:()=>`${P('<circle cx="0" cy="-60" r="56"/>','#fff')}${pen('M0 -60 L0 -98 M0 -60 L26 -60',5)}${[0,1,2,3,4,5,6,7,8,9,10,11].map(i=>`<circle cx="${Math.sin(i*Math.PI/6)*46}" cy="${-60-Math.cos(i*Math.PI/6)*46}" r="3" fill="${INK}"/>`).join('')}`,
+ gift:()=>`${P('<rect x="-50" y="-72" width="100" height="72" rx="6"/>','#f3a73b')}${P('<rect x="-9" y="-72" width="18" height="72"/>','#e2457a')}${P('<path d="M0 -72 C-30 -106 -50 -76 0 -72 C50 -76 30 -106 0 -72Z"/>','#e2457a')}`,
+ bag:()=>`${P('<path d="M-50 -80 L50 -80 L60 0 L-60 0Z"/>','#7a4fa3')}${pen('M-24 -80 Q-24 -120 0 -120 Q24 -120 24 -80',4)}`,
+ tool:()=>`${P('<rect x="-8" y="-120" width="16" height="70" rx="4"/>','#e85b5b')}${P('<rect x="-4" y="-50" width="8" height="50" rx="2"/>','#8a96a3')}`,
+ wire:()=>pen('M-90 -20 C-50 -80 -20 30 20 -30 S70 -60 90 -10',5)+`<rect x="80" y="-24" width="24" height="18" rx="4" fill="#f4f4f4" stroke="${INK}" stroke-width="2"/>`,
+ apple:()=>`${P('<circle cx="0" cy="-34" r="34"/>','#e85b5b')}${pen('M0 -66 L4 -84',4)}${P('<ellipse cx="16" cy="-80" rx="12" ry="6"/>','#7dbb5c')}`,
+ bed:()=>`${P('<rect x="-100" y="-50" width="200" height="40" rx="10"/>','#9fd0ee')}${P('<rect x="-100" y="-90" width="20" height="90" rx="6"/>','#c48a5a')}${P('<ellipse cx="-56" cy="-58" rx="30" ry="14"/>','#fff')}`,
+ star:()=>`<path d="M0 -40 L11 -12 L40 -12 L17 6 L26 34 L0 16 L-26 34 L-17 6 L-40 -12 L-11 -12Z" fill="#ffd166" stroke="${INK}" stroke-width="2.5"/>`,
+ heart:()=>P('<path d="M0 -10 C-50 -50 -30 -90 0 -66 C30 -90 50 -50 0 -10Z"/>','#ef6f8f'),
+ camera:()=>`${P('<rect x="-50" y="-70" width="100" height="64" rx="10"/>','#3f4246')}<circle cx="0" cy="-38" r="20" fill="#7ee0ff" stroke="#fff" stroke-width="4"/>${P('<rect x="-30" y="-82" width="30" height="14" rx="3"/>','#3f4246')}`,
+ bridge:()=>`${P('<path d="M-140 0 L-140 -60 Q0 -140 140 -60 L140 0 L110 0 Q0 -80 -110 0Z"/>','#d9a066')}`,
+ shoes:()=>`${P('<path d="M-70 0 L-70 -30 Q-50 -40 -30 -26 L-10 -14 L-10 0Z"/>','#e85b5b')}${P('<path d="M10 0 L10 -30 Q30 -40 50 -26 L70 -14 L70 0Z"/>','#e85b5b')}`,
+ nametag:()=>`${P('<rect x="-56" y="-70" width="112" height="60" rx="8"/>','#fff')}<rect x="-56" y="-70" width="112" height="18" rx="6" fill="#e2457a"/><text x="0" y="-24" text-anchor="middle" font-family="Andika" font-size="20" fill="${INK}">PILOT</text>`,
+ photo:()=>`${P('<rect x="-50" y="-90" width="100" height="80" rx="4"/>','#fff')}<path d="M-40 -24 L-12 -54 L10 -34 L24 -46 L40 -24Z" fill="#7dbb5c"/><circle cx="24" cy="-70" r="8" fill="#ffd166"/>`,
+ airplane:()=>`${P('<path d="M-90 0 Q-90 -16 -70 -16 L70 -16 Q90 -8 70 0Z"/>','#f4f4f4')}${P('<path d="M-10 -14 L-40 -50 L-20 -50 L20 -14Z"/>','#5aa6d8')}${P('<path d="M-80 -14 L-90 -40 L-74 -40 L-60 -14Z"/>','#5aa6d8')}`,
+ plant:()=>`${P('<path d="M-30 0 L-36 -40 L36 -40 L30 0Z"/>','#d9a066')}${P('<path d="M0 -40 Q-40 -70 -20 -100 Q0 -70 0 -40Z"/>','#7dbb5c')}${P('<path d="M0 -40 Q40 -80 20 -110 Q0 -80 0 -40Z"/>','#a6d36a')}`,
+ snack:()=>`${P('<ellipse cx="0" cy="-10" rx="60" ry="12"/>','#fff')}${P('<circle cx="-18" cy="-28" r="16"/>','#e85b5b')}${P('<rect x="2" y="-40" width="34" height="26" rx="6"/>','#e0b45a')}`,
+ paper:()=>`${P('<rect x="-50" y="-90" width="100" height="80" rx="4"/>','#fff')}${G(0,-50,.35,drone(0,0,1,'#e2457a','happy'))}${pen('M30 -100 L60 -130 M40 -96 L70 -120',3)}`,
+};
+// ---- word → picture rules (first match wins per rule; order = priority) ----
+const RULES=[
+ [/\brobot ?dogs?\b/,'robotdog','big'],[/\brobots?\b|\bbot\b/,'robot','big'],
+ [/\bcoach\b|\bwhistle\b/,'teacher:coach','big'],[/\bteachers?\b/,'teacher','big'],
+ [/\bfirefighters?\b|fire truck/,'teacher:firefighter','big'],[/\bfarmers?\b/,'teacher:farmer','big'],[/\bdoctors?\b/,'teacher:doctor','big'],
+ [/\bbatter(y|ies)\b.*\b(low|tired)\b|\b(low|tired)\b.*\bbatter/,'battery:low','mid'],[/\bbatter(y|ies)\b|\bcharg|\bfull\b/,'battery','mid'],
+ [/\bgoggles?\b/,'goggles','mid'],[/\bhelmet\b/,'helmet','mid'],[/\bremote\b|joystick/,'remote','mid'],
+ [/\brings?\b|\bthrough\b/,'ring','big'],[/\bgoal\b|\bsoccer\b/,'net','big'],[/\bnet\b|\bfield\b/,'net','big'],[/\bballs?\b/,'ball','mid'],
+ [/\bboxe?s?\b/,'box','mid'],[/\btables?\b|\bdesk\b/,'table','big'],[/\bchair\b/,'chair','mid'],
+ [/\brain(y|ing)?\b/,'raincloud','sky'],[/\bsunny\b|\bsun\b|\bsummer\b/,'sun','sky'],[/\bwindy\b|\bwind\b|\bfall\b|\bleaves\b/,'wind','sky'],[/\bcloudy\b/,'cloud','sky'],
+ [/\bnight\b|\bsleep\b|\bdreams?\b|good night/,'moon','sky'],[/\bstars?\b/,'star','sky'],
+ [/\btrees?\b|\bpark\b|\bspring\b/,'tree','big'],[/\bflowers?\b|\bplants?\b|\bgrow\b/,'plant','mid'],[/\bbirds?\b/,'bird','sky'],
+ [/\bcars?\b|\bdrive\b|\bwheels?\b/,'car','big'],[/\bboat\b|\bsail\b/,'boat','big'],[/\brockets?\b/,'rocket','big'],[/\bairplane\b/,'airplane','sky'],
+ [/\btablet\b|\bscreen\b|\bapp\b/,'tablet','mid'],[/\bcod(e|ing)\b|\bcomputers?\b/,'computer','mid'],[/\bblocks?\b|\bbuild/,'blocks','mid'],
+ [/\bbirthday\b|\bwish\b|\bcake\b/,'cake','mid'],[/\bwater\b|\bdrink\b/,'water','mid'],[/\bwash\b|\bclean\b/,'wash','mid'],
+ [/\bpropellers?\b/,'propeller','mid'],[/\blight show\b|\blights\b|\bpretty\b|\bblink/,'lights','sky'],
+ [/\bgreen\b.*\blight\b|\blight\b.*\bgreen\b|\bgreen means\b/,'light:green','mid'],[/\blight is red\b|\bred light\b/,'light:red','mid'],
+ [/\bplugs?\b|\bwires?\b|\bchargers?\b/,'plug','mid'],[/\bbooks?\b|\bread(ing)?\b|\bstory\b/,'book','mid'],
+ [/\bsing\b|\bsong\b|\bmusic\b|\bsounds?\b|\bbeep\b|\bbuzz/,'music','sky'],[/o'clock|\btime\b|\bclock\b|\bon time\b/,'clock','mid'],
+ [/\bgifts?\b|\bfor you\b/,'gift','mid'],[/\bbag\b/,'bag','mid'],[/\bscrewdriver\b|\bfix\b/,'tool','mid'],
+ [/\bsnack\b|\beat\b|\bate\b|\blunch\b|\byummy\b|\bhamburgers?\b/,'snack','mid'],[/\bapples?\b/,'apple','mid'],[/\bbed\b|\bnap\b/,'bed','big'],
+ [/\bcamera\b|\bphotos?\b|\bvideo\b/,'camera','mid'],[/\bbridge\b/,'bridge','big'],[/\bshoes\b/,'shoes','mid'],[/\bname tag\b|\bname\b/,'nametag','mid'],
+ [/\bpaper\b|\bdraw\b|\bwrite\b|\bcut\b/,'paper','mid'],[/\bheart\b|\blove\b|\bkind\b|\bcare\b/,'heart','sky'],
+];
+const PEOPLE=/\b(i|i'm|me|my|myself|we|us|our|you|your|he|him|his|she|her|they|them|their|pilots?|friends?|team(mates)?|together|everyone|kids?|class|mia|jack|zebby|let's|hands?|wear|line up|sit|stand|people|run|ran|walk|jump|inside|outside|cheer|shake|wait|listen|laugh|eat|drink|play)\b/;
+const MANY=/\b(people|we|us|our|they|them|their|pilots|friends|team(mates)?|together|everyone|share|sharing|each other|line up|class)\b/;
+const DRONEY=/\b(drones?|zippy|quadcopter|fly|flies|flying|flew|take off|takes off|land(s|ed|ing)?|hover|spin|up|down|left|right|high|goal|ring|propellers?|battery|pilot|round)\b/;
+const NOT=/^(don't|do not|no\b|never|stop)|\bdon't (touch|fly|run|throw|step|pull|play|eat)|\bnot a toy\b|\bno flying\b/i;
+const SKYBG={raincloud:['#c9d6e2','#eef3f7'],moon:['#2c3f6b','#6b7fb3'],cloud:['#d7e3ee','#f3f7fb'],sun:['#bfe8ff','#fff6d8'],wind:['#cfe9f6','#f3fbff']};
+function sceneArt(raw,seed=0){
+  const t=String(raw).replace(/[\[\]{}]/g,'').toLowerCase();
+  const hits=[]; const used=new Set();
+  for(const [re,key,slot] of RULES){ if(re.test(t)&&!used.has(key.split(':')[0])){ used.add(key.split(':')[0]); hits.push({key,slot,idx:t.search(re)}); } }
+  hits.sort((a,b)=>a.idx-b.idx);
+  const sky=hits.filter(h=>h.slot==='sky').slice(0,2), ground=hits.filter(h=>h.slot!=='sky').slice(0,2);
+  const wantDrone=DRONEY.test(t) || (!hits.length && !PEOPLE.test(t));
+  const wantPeople=PEOPLE.test(t) || (!hits.length && !wantDrone);
+  const many=MANY.test(t);
+  const bg=SKYBG[(sky.find(h=>SKYBG[h.key])||{}).key]||['#d9f0ff','#fffaf0'];
+  const night=bg[0]==='#2c3f6b';
+  const draw=(h,x,y,s)=>{const [k,arg]=h.key.split(':');return G(x,y,s,PROPS[k](arg));};
+  let out='';
+  // sky items
+  sky.forEach((h,i)=>{ if(h.key==='moon') out+=draw(h,470,80,1)+PROPS.star().replace('<path',`<path transform="translate(380 50) scale(.4)"`); else out+=draw(h,i?110:440,i?80:78,h.key==='lights'?1.2:.9); });
+  // ground layout: up to 2 ground props + people + drone, spaced across the page
+  const items=[];
+  ground.forEach(h=>items.push({type:'prop',h}));
+  if(wantPeople) items.push({type:'people'});
+  if(wantDrone) items.push({type:'drone'});
+  // pick x positions
+  const n=items.filter(i=>i.type!=='drone').length;
+  const xs=n<=1?[280]:n===2?[175,395]:[110,280,450];
+  let k=0; const flyHigh=/\b(up|high|fly|flies|flying|take off|over|sky)\b/.test(t), low=/\b(down|land|landed|landing)\b/.test(t);
+  items.forEach(it=>{
+    if(it.type==='drone') return;
+    const x=xs[k++];
+    if(it.type==='prop'){ const big=it.h.slot==='big'; out+=`<ellipse cx="${x}" cy="318" rx="${big?110:70}" ry="16" fill="#e8f3d6" filter="url(#wc)"/>`+draw(it.h,x,316,big?(it.h.key==='net'?.95:1):1.1); }
+    else { const c1=CAST[seed%3], c2=CAST[(seed+1)%3];
+      const pose=/\b(hi|hello|good morning|good night|welcome|goodbye|bye)\b/.test(t)?'wave':/!|\byay\b|\bgoal\b|\bgood job\b|\bi did it\b/.test(t)?'cheer':/\b(look|see|there|that)\b/.test(t)?'point':wantDrone?'remote':'wave';
+      out+=`<ellipse cx="${x}" cy="318" rx="${many?120:80}" ry="18" fill="#e8f3d6" filter="url(#wc)"/>`;
+      out+= many ? c2(x-50,320,.62,pose==='remote'?'cheer':pose)+c1(x+45,322,.66,pose) : c1(x,322,.78,pose); }
+  });
+  if(wantDrone){ const dx=n===0?280:(xs.length>1?(n===2?285:(seed%2?190:370)):(seed%2?140:420)); const dy=low?230:(flyHigh&&!sky.length)?95:150;
+    const motion=/\bup\b/.test(t)?pen(`M${dx} ${dy+80} l0 50 m-12 -36 l12 -14 l12 14`,3):/\bdown\b/.test(t)?pen(`M${dx} ${dy-90} l0 -40 m-12 26 l12 14 l12 -14`,3):/\bround\b|\bspin\b|\baround\b/.test(t)?pen(`M${dx-80} ${dy} A80 30 0 1 0 ${dx+80} ${dy}`,2.5):/\bleft\b/.test(t)?pen(`M${dx-70} ${dy} l-40 0 m14 -12 l-14 12 l14 12`,3):/\bright\b/.test(t)?pen(`M${dx+70} ${dy} l40 0 m-14 -12 l14 12 l-14 12`,3):'';
+    out+=motion+drone(dx,dy,.8,COLORS[seed%COLORS.length],/\btired\b/.test(t)||night?'sleep':/!/.test(t)?'wow':'happy'); }
+  if(NOT.test(t)) out+=`<g transform="translate(${n?xs[0]:280} 180)"><circle r="70" fill="none" stroke="#e8484a" stroke-width="10" opacity=".85"/><line x1="-50" y1="-50" x2="50" y2="50" stroke="#e8484a" stroke-width="10" opacity=".85"/></g>`;
+  return `<svg class="art" viewBox="0 0 560 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${WC}
+   <defs><linearGradient id="bg${seed}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${bg[0]}"/><stop offset="1" stop-color="${bg[1]}"/></linearGradient></defs>
+   <rect width="560" height="420" fill="url(#bg${seed})"/>
+   <path d="M0 330 C140 312 300 340 560 318 L560 420 L0 420Z" fill="${night?'#5f9a5a':'#bfe3a2'}" filter="url(#wc)"/>
+   ${out}</svg>`;
+}
+
 // unit page: white page like the original, a character + Zippy, small vignette props
 function pageArt(u,p,tint){
   const c=COLORS[(u+p)%COLORS.length];
@@ -608,7 +751,7 @@ function renderTalk(b,sel){
   let body='';
   if(it.type==='unit'){
     const tint=['#cfe6f5','#f6d3e0','#fde3b0','#d7efc9','#e5dcf3','#fbd9c6'][it.i%6];
-    body=`<div class="spread">${it.u[2].map((s,p)=>`<div class="pagec">${pageArt(it.i,p,tint)}
+    body=`<div class="spread">${it.u[2].map((s,p)=>`<div class="pagec">${sceneArt(s,it.i*4+p)}
       ${p===0?`<div class="tab"><b>${it.i+1}</b>${esc(it.u[0])}</div>`:''}
       <div class="sent">${sayBtn(s)}<span>${esc(s)}</span></div><span class="pno">${it.pg+p}</span></div>`).join('')}</div>`;
   }else if(it.type==='song'){
@@ -634,7 +777,7 @@ function renderSight(b,sel){
   const page = w.length>1 ? `<div class="wpage">
       <div><div class="big">${esc(w[0])}</div>
         <div class="trace"><span class="lbl">Trace and Read.</span><div class="trow">${traceSVG(w[0])}</div><div class="trow">${traceSVG(w[0])}</div></div></div>
-      <div class="wsents"><div class="wart">${pageArt(sel%10,sel%4,["#cfe6f5","#fde3b0","#d7efc9","#f6d3e0"][sel%4])}</div><div class="sent">${sayBtn(w[1])}<span>${fmt(w[1])}</span></div><div class="sent">${sayBtn(w[2])}<span>${fmt(w[2])}</span></div></div>
+      <div class="wsents"><div class="wart">${sceneArt((w[1]||w[0])+' '+(w[2]||''),sel)}</div><div class="sent">${sayBtn(w[1])}<span>${fmt(w[1])}</span></div><div class="sent">${sayBtn(w[2])}<span>${fmt(w[2])}</span></div></div>
       <span class="pno">${pg}</span></div>`
     : `<div class="wpage"><div><div class="big">${esc(w[0])}</div><div class="trace"><span class="lbl">Trace and Read.</span><div class="trow">${traceSVG(w[0])}</div><div class="trow">${traceSVG(w[0])}</div></div></div>
       <div class="wsents"><p class="tbd">這冊的句子還沒寫。C、D 冊的照片還沒同步到電腦，這裡的字表暫時用 Dolch 220 扣掉 A、B 冊的字，依難度平均分成兩冊；拿到原書字表後會照原書順序換掉。</p></div><span class="pno">${pg}</span></div>`;
@@ -647,6 +790,22 @@ function renderSight(b,sel){
   view.querySelector('#wn').onclick=()=>openBook(state.id,sel+1);
 }
 /* ===== Phonics books ===== */
+/* Phonics story: show exactly the nouns named in the sentence */
+const EXTRA_PIC={cat:'🐱',goat:'🐐',hen:'🐔',kid:'🧒',lion:'🦁',mouse:'🐭',queen:'👸',tiger:'🐯',worm:'🪱',yak:'🐃',dog:'🐕',ox:'🐂',octopus:'🐙',elephant:'🐘',fox:'🦊',jack:'👦',zebby:'🦓',desk:'🪑',sky:'🌤️',field:'🌱',elevator:'🛗',igloo:'🛖',flag:'🚩',helicopter:'🚁',goggles:'🥽',app:'📱',kite:'🪁',key:'🔑',light:'💡',phone:'📱',rocket:'🚀',tablet:'📱',camera:'📷',wheel:'🛞',box:'📦',map:'🗺️',jet:'🛩️',joystick:'🕹️',net:'🥅',nut:'🔩',umbrella:'☂️','yo-yo':'🪀',video:'📹',van:'🚐',battery:'🔋',bot:'🤖',robot:'🤖',satellite:'🛰️',insect:'🐞',ink:'🖋️',ant:'🐜',quadcopter:'DRONE',drone:'DRONE'};
+function phonScene(sent,words,seed){
+  const t=sent.replace(/[{}]/g,'').toLowerCase();
+  const map={...EXTRA_PIC}; words.forEach(([w,p])=>map[w.toLowerCase()]=p);
+  const found=[]; Object.keys(map).sort((a,b)=>b.length-a.length).forEach(k=>{const i=t.search(new RegExp('\\b'+k.replace('-','\\-')+'\\b')); if(i>=0&&!found.some(f=>(f.i<=i&&i<f.i+f.k.length)||map[f.k]===map[k])) found.push({k,i});});
+  found.sort((a,b)=>a.i-b.i);
+  const f=found.slice(0,3), xs=f.length===1?[280]:f.length===2?[180,380]:[110,280,450];
+  const up=/\bup\b/.test(t);
+  const items=f.map((o,j)=>{const pic=map[o.k], x=xs[j];
+    return pic==='DRONE' ? drone(x,up?120:190,.9,COLORS[seed%COLORS.length],'happy')
+      : `<ellipse cx="${x}" cy="300" rx="70" ry="14" fill="#e8f3d6" filter="url(#wc)"/><text x="${x}" y="280" text-anchor="middle" font-size="${f.length===3?110:130}">${pic}</text>`;}).join('');
+  return `<svg class="art" viewBox="0 0 560 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${WC}
+   <rect width="560" height="420" fill="#eaf6ff"/><path d="M0 330 C140 312 300 340 560 318 L560 420 L0 420Z" fill="#bfe3a2" filter="url(#wc)"/>${items||drone(280,170,1,'#ff7a3d','happy')}</svg>`;
+}
+
 const pic = (p)=> p==='DRONE' ? `<svg viewBox="-70 -70 140 140" class="picsvg">${WC}${drone(0,0,1,'#ff7a3d','happy')}</svg>` : `<span class="emo">${p}</span>`;
 const hiLetter=(w,ch)=>esc(w).split('').map(c=>c.toLowerCase()===ch.toLowerCase()?`<b class="hl">${c}</b>`:c).join('');
 const phonFmt=s=>esc(s).replace(/\{([^}]+)\}/g,'<span class="hl">$1</span>');
@@ -683,7 +842,7 @@ function renderPhon(b,sel){
         <div class="wcards four">${words.map(([w,p])=>`<div class="wc">${pic(p)}<span class="circ">${esc(w).split('').map(c=>`<i data-ok="${c.toLowerCase()===lo?1:0}">${c}</i>`).join('')}</span>${sayBtn(w)}</div>`).join('')}</div></div>
       <span class="pno">${p0}</span></div>
       <div class="ppage">${letterHunt(ch)}<span class="pno">${p0+1}</span></div>
-      <div class="ppage story"><div class="wart">${pageArt(n,i%4,['#cfe6f5','#fde3b0','#d7efc9','#f6d3e0'][i%4])}</div><div class="sent">${sayBtn(s1.replace(/[{}]/g,''))}<span>${phonFmt(s1)}</span></div><span class="pno">${p0+2}</span></div>
+      <div class="ppage story"><div class="wart">${phonScene(s1,words,n)}</div><div class="sent">${sayBtn(s1.replace(/[{}]/g,''))}<span>${phonFmt(s1)}</span></div><span class="pno">${p0+2}</span></div>
       <div class="ppage frames"><div class="frame">${pic(words[0][1])}<p>${phonFmt(s2)}</p>${sayBtn(s2.replace(/[{}]/g,''))}</div><div class="frame">${pic(words[1][1])}<p>${hiLetter(words[1][0],ch)}, ${hiLetter(words[2][0],ch)}, ${hiLetter(words[3][0],ch)}</p>${sayBtn(words.slice(1).map(w=>w[0]).join(', '))}</div><span class="pno">${p0+3}</span></div>`;
   }
   view.innerHTML=`<div class="vhead"><h3>${esc(b.title)}</h3><span class="sub">${b.zh} · ${L.length} 課 · ${b.mode==='rw'?'每課 4 頁：描寫＋圈字母、找字母、故事句、字框':'每課 2 頁：描寫＋例字、塗色大字母'}</span></div>
